@@ -92,7 +92,16 @@ function core_page (&$page_data, $page_name, $options) {
         case 'permissions':
             if (user_access('user_permissions_edit')) {
                 page_set_title($page_data, 'Permissions');
-                page_add_content_top($page_data, theme('form', crm_get_form('user_permissions')));
+		$content = theme('form', crm_get_form('user_permissions'));
+                $content .= theme('form', crm_get_form('member_filter'));
+                $opts = array(
+                    'filter'=>$_SESSION['member_filter']
+                    , 'show_export'=>true
+                    , 'exclude'=>array('emergencyName', 'emergencyPhone')
+                );
+                $content .= theme('table', crm_get_table('member', $opts));
+                page_add_content_top($page_data, $content);
+
             }
             break;
         case 'upgrade':
